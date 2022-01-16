@@ -10,7 +10,7 @@ lat, lon, year = 33.2164, -97.1292, 2010
 # You must request an NSRDB api key from the link above
 api_key = 'KJLAhPJpHhvfJ4UXGkssJSwWpr0fBdn24Kv6HHNw'
 # Set the attributes to extract (e.g., dhi, ghi, etc.), separated by commas.
-attributes = 'ghi,dhi,dni,wind_speed,air_temperature,solar_zenith_angle'
+attributes = 'dhi,dni,air_temperature'
 # Choose year of data
 year = '2010'
 # Set leap year to true or false. True will return leap day data if present, false will not.
@@ -40,5 +40,4 @@ timezone, elevation = info['Local Time Zone'], info['Elevation']
 
 # Return all but first 2 lines of csv to get data:
 df = pd.read_csv(url)
-print ('shape:',df.shape)
-df.head()   
+print(df.head(2)) 
