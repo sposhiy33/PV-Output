@@ -51,12 +51,15 @@ def multiples(n):
 
 # Will decide number of subdivsions to equal the total area (subdivisions of width are given first)
 ### COME BACK AND REVIEW: need to be able to make this part universal to any list
+# ------- I fixed this, but it assumes that we want the grid to look like a square and have the width as the larger value
 def num_of_divisions(area):
-
     m = multiples(area)
-    w_n = m[6]
-    h_n = m[5]
-
+    w_n = m[len(m) // 2]
+    h_n = m[len(m) // 2]
+    if (len(m) % 2) == 1:
+        return w_n, h_n
+    else:
+        h_n = m[(len(m) // 2) - 1]
     return w_n, h_n
 
 # Gives us the coordinate length of each div (again, length of each div along the width is given first)
