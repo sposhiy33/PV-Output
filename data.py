@@ -9,7 +9,7 @@ import math
 
 # Read file
 df = gpd.read_file('USAStateBorderGIS/cb_2018_us_state_500k.shp')
-# This segment make a new data table with the lower and upper bounds of each state
+# This segment makes a new data table with the lower and upper bounds of each state
 # Format of bounds = minx , miny , maxx , maxy
 GeoDF = gpd.GeoDataFrame(df)
 bound = pd.DataFrame(GeoDF.bounds)
