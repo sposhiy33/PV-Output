@@ -15,7 +15,8 @@ state_index = 21
 state_row = states.iloc[[state_index]]
 
 
-## make geodataframe for heatmap
+## make geodataframe from the irridiance data that was collected
+## from 'data.py'
 irridiance = pd.read_csv("Irridiance_Colorado.csv")
 
 gdf = geopandas.GeoDataFrame(irridiance,
