@@ -8,7 +8,7 @@ import math
 # pd.set_option('display.max_columns', None)
 
 # Read file
-df = gpd.read_file('CartographicBoundries/state_US_shapefile/cb_2018_us_state_500k.shp')
+df = gpd.read_file('CartographicBoundries/US_State/cb_2018_us_state_500k.shp')
 # This segment makes a new data table with the lower and upper bounds of each state
 # Format of bounds = minx , miny , maxx , maxy
 GeoDF = gpd.GeoDataFrame(df)
@@ -28,7 +28,7 @@ def main():
     data = get_data(coords[1], coords[0])
     print(data)
     data.to_csv("testdata.csv")
-
+    
 # Returns the boundries of state
 def boundary(state_index):
 
@@ -111,7 +111,7 @@ def get_avg_col(data, col, starting_row, index_num_of_last_row, number_of_rows):
 ## ACTUALLY GETTING THE DATA FROM THE NSRDB API
 def get_data(list_height, list_width):
 
-    df = pd.DataFrame(columns = ['lata', 'long', 'AVG_ghi', 'AVG_dhi', 'AVG_dni'])
+    df = pd.DataFrame(columns = ['lat', 'lon', 'AVG_ghi', 'AVG_dhi', 'AVG_dni'])
 
     for latitude in list_height:
         for longitude in list_width:
@@ -154,7 +154,7 @@ def get_data(list_height, list_width):
             avg_dhi = get_avg_col(info, 6, 2, 8761, 8760)
             avg_dni = get_avg_col(info, 7, 2, 8761, 8760)
 
-            df2 = pd.DataFrame([{'lata':latitude, 'long':longitude, 'AVG_ghi':avg_ghi, 'AVG_dhi':avg_dhi, 'AVG_dni':avg_dni}])
+            df2 = pd.DataFrame([{'lat':latitude, 'lon':longitude, 'AVG_ghi':avg_ghi, 'AVG_dhi':avg_dhi, 'AVG_dni':avg_dni}])
             df = df.append(df2, ignore_index = True)
 
     return(df)
