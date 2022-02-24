@@ -1,31 +1,41 @@
 "This script is to generate heatmaps of the Irridiance data"
+import geoplot as gplt
+import geoplot.crs as gcrs
 import pandas as pd
-import geopandas
-# import geoplot.crs as gcrs
+import geopandas as gpd
 import matplotlib.pyplot as plt
-import math
 
-pd.set_option('display.max_columns', None)
+## Contiguous US
+df = gpd.read_file('CartographicBoundries/US_State/cb_2018_us_state_500k.shp')
+df = df.drop([37,38,44,45,13,27,42])
+contUSdf = df.dissolve()
+
+# Load in Irridiance Data
+contUS_data = pd.read_csv('Data/ContinguousUS_data.csv')
+print(contUS_data)
+
+# GeoDataFrame from the Irridaince Data
+gdf_DNI = gpd.GeoDataFrame(contUS_data.AVG_dhi,
+        geometry = gpd.points_from_xy(contUS_data.lon, contUS_data.lat))
+
+##################
+### PLOTS #####
+##################
+ax = gplt.polyplot(contUSdf, projection=gcrs.AlbersEqualArea())
+
+gplt.pointplot(gdf_DNI, hue='AVG_dhi',
+                 legend=True, ax=ax)
+
+# gplt.kdeplot(gdf_DNI, n_levels = 100, projection=gcrs.AlbersEqualArea(), ax=ax)
 
 
-## get shapefile of the US states and plot
-states = geopandas.read_file('CartographicBoundries/US_State/cb_2018_us_state_500k.shp')
 
-# Colorado index = 21
-state_index = 21
-state_row = states.iloc[[state_index]]
+# ax1 = gplt.kdeplot(
+#         clip=contUSdf.geometry
+#         cmap='Reds',
+#         projection=gcrs.AlbersEqualArea(),
+#         shade=True, shade_lowest=False,
+#         clip=contUSdf.geometry,
+#         ax=ax)
 
-
-## make geodataframe from the irridiance data that was collected
-## from 'data.py'
-irridiance = pd.read_csv("Irridiance_Colorado.csv")
-
-gdf = geopandas.GeoDataFrame(irridiance,
-        geometry = geopandas.points_from_xy(irridiance.long, irridiance.lata))
-
-
-## And now ... plot everything ##
-
-ax1 = state_row.plot(color='white', edgecolor='black')
-gdf.plot(ax=ax1, color='red')
 plt.show()
