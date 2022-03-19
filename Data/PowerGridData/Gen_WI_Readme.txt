@@ -1,0 +1,9 @@
+This data consists of four tables, each contained in a single comma-delimited CSV file. The files describe data regarding the buses and lines in the synthetic network generated based off of the WI, as in the paper. The data are organized as follows:
+
+Gen_WI_Bus_Locations.csv describes the location of each bus in the generated network. Each tuple of the corresponding table contains three fields: the bus number (labelled as Bus Number), the longitude of the bus in degrees (labelled as Lon), and the latitude of the bus in degrees (labelled as Lat). Bus numbers are reused between tables so that a particular number corresponds to the same bus in each table.
+
+Gen_WI_Lines.csv describes the lines going between different pairs of busses in the generated network. Each tuple contains four fields: the line number (labelled as Line Number), the bus number at one end of the line (labelled as Bus 1), the bus number at the other end of the line (labelled as Bus 2), and the length of the line (labelled as x). 
+
+Gen_WI_Supply_Values.csv describes the supply at each node in the generated network. Supplies are determined by connecting each generator in the WI to its nearest neighboring bus, and summing the supplies at each bus. Each tuple contains two fields: the bus number (labelled as Bus Number) and the supply in megawatts (labelled as Supply). 
+
+Gen_WI_Demand_Values.csv describes the demand at each node in the generated network. Supplies are determined by connecting each town in the WI to its nearest neighboring bus, and summing the corresponding estimated demand at each bus. Each tuple contains two fields: the bus number (labelled as Bus Number) and the demand in megawatts (labelled as Demand). 
