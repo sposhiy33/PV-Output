@@ -6,11 +6,12 @@ pd.set_option('display.max_columns', None)
 
 # Declare all variables as strings. Spaces must be replaced with '+', i.e., change 'John Smith' to 'John+Smith'.
 # Define the lat, long of the location and the year
-lat,lon,year = 39.5501, -105.358887, 2020
+lat,lon,year = 30.186696, -97.858323, 2020
 # You must request an NSRDB api key from the link above
 api_key = 'Ys1FBygszkOmc2ifUvWD8LdkRFWGaIbNByDa5Ddc'
 # Set the attributes to extract (e.g., dhi, ghi, etc.), separated by commas.
-attributes = 'ghi,dhi,dni'
+# TO SEE OTHER VARAIBLES, https://developer.nrel.gov/docs/solar/nsrdb/himawari-download/
+attributes = 'ghi,dhi,dni,wind_speed,air_temperature,solar_zenith_angle,surface_pressure,relative_humidity'
 # Choose year of data
 year = '2020'
 # Set leap year to true or false. True will return leap day data if present, false will not.
@@ -40,26 +41,4 @@ print(info.shape)
 # See metadata for specified properties, e.g., timezone and elevation
 timezone, elevation = info['Local Time Zone'], info['Elevation']
 
-# print(info)
-
-def get_avg_col(data, col, starting_row, index_num_of_last_row, number_of_rows):
-
-    total = 0
-
-    for i in range(starting_row, index_num_of_last_row + 1):
-        z = int(data.iloc[i,col])
-        total = total + z
-
-    avg = total/number_of_rows
-
-    return avg
-
-print(info.iloc[1,5],get_avg_col(info, 5, 2, 8761, 8760))
-
-
-df = pd.DataFrame(columns = ['lon', 'lat', 'dni', 'dhi', 'ghi'])
-
-df2 = pd.DataFrame([{'lon':38, 'lat':102, 'dni':2, 'dhi':3, 'ghi':4}])
-
-df = df.append(df2)
-print(df)
+info.to_csv('NSRDBout_s2.csv')
