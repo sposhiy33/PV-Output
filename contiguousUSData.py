@@ -1,7 +1,6 @@
 import pandas as pd
 import geopandas as gpd
 from geopandas import GeoSeries
-import geoplot
 import shapely
 import shapely.speedups
 import matplotlib.pyplot as plt
@@ -90,7 +89,6 @@ def average(data, col):
     avg = sum(intList)/len(intList)
     return avg
 
-
 def point_dataframe(longitude, latitude):
     point = pd.DataFrame(columns = ['lon', 'lat'])
     for x in longitude:
@@ -107,50 +105,53 @@ def point_dataframe(longitude, latitude):
 
 ## ACTUALLY GETTING THE DATA FROM THE NSRDB API
 def get_data(list_lat, list_lon):
-    df = pd.DataFrame(columns = ['lat', 'lon', 'AVG_ghi', 'AVG_dhi', 'AVG_dni'])
-    for i in range(len(list_lat)):
-            # Declare all variables as strings. Spaces must be replaced with '+', i.e., change 'John Smith' to 'John+Smith'.
-            # Define the lat, long of the location and the year
-            latitude = list_lat[i]
-            longitude = list_lon[i]
-            lat,lon,year = latitude, longitude, 2010
-            # You must request an NSRDB api key from the link above
-            api_key = 'Ys1FBygszkOmc2ifUvWD8LdkRFWGaIbNByDa5Ddc'
-            # Set the attributes to extract (e.g., dhi, ghi, etc.), separated by commas.
-            attributes = 'ghi,dhi,dni,wind_speed,air_temperature,solar_zenith_angle,surface_pressure,relative_humidity'            # Choose year of data
-            year = '2010'
-            # Set leap year to true or false. True will return leap day data if present, false will not.
-            leap_year = 'false'
-            # Set time interval in minutes, i.e., '30' is half hour intervals. Valid intervals are 30 & 60.
-            interval = '60'
-            # Specify Coordinated Universal Time (UTC), 'true' will use UTC, 'false' will use the local time zone of the data.
-            # NOTE: In order to use the NSRDB data in SAM, you must specify UTC as 'false'. SAM requires the data to be in the
-            # local time zone.
-            utc = 'true'
-            # Your full name, use '+' instead of spaces.
-            your_name = 'Shrey+Poshiya'
-            # Your reason for using the NSRDB.
-            reason_for_use = 'personal+project'
-            # Your affiliation
-            your_affiliation = 'Santa+Fe+Preparatory+School'
-            # Your email address
-            your_email = 'shreyposh@gmail.com'
-            # Please join our mailing list so we can keep you up-to-date on new developments.
-            mailing_list = 'false'
-            # Declare url string
-            url = 'https://developer.nrel.gov/api/solar/nsrdb_psm3_download.csv?wkt=POINT({lon}%20{lat})&names={year}&leap_day={leap}&interval={interval}&utc={utc}&full_name={name}&email={email}&affiliation={affiliation}&mailing_list={mailing_list}&reason={reason}&api_key={api}&attributes={attr}'.format(year=year, lat=lat, lon=lon, leap=leap_year, interval=interval, utc=utc, name=your_name, email=your_email, mailing_list=mailing_list, affiliation=your_affiliation, reason=reason_for_use, api=api_key, attr=attributes)
-            # Return just the first 2 lines to get metadata:
-            info = pd.read_csv(url, header=None)
-            # See metadata for specified properties, e.g., timezone and elevation
-            timezone, elevation = info['Local Time Zone'], info['Elevation']
-            info = info.drop(axis=0, index=[0,1])
-            print(info)
-            ghi = average(info, 'Latitude')
-            dhi = average(info, 'Longitude')
-            dni = average(info, 'Time Zone')
-            df2 = pd.DataFrame([{'lat':latitude, 'lon':longitude, 'GHI':avg_ghi, 'DHI':avg_dhi, 'DNI':avg_dni}])
-            df = df.append(df2, ignore_index = True)
-            print()
-    return(df)
+    df = pd.DataFrame(columns = ['lat', 'lon', 'GHI', 'DHI', 'DNI'])
+    if len(list_lat) != len(list_lon):
+        print("Error --- Shape of lat does not match that of lon")
+    else:
+        for i in range(len(list_lat)):
+                # Declare all variables as strings. Spaces must be replaced with '+', i.e., change 'John Smith' to 'John+Smith'.
+                # Define the lat, long of the location and the year
+                latitude = list_lat[i]
+                longitude = list_lon[i]
+                lat,lon,year = latitude, longitude, 2010
+                # You must request an NSRDB api key from the link above
+                api_key = 'Ys1FBygszkOmc2ifUvWD8LdkRFWGaIbNByDa5Ddc'
+                # Set the attributes to extract (e.g., dhi, ghi, etc.), separated by commas.
+                attributes = 'ghi,dhi,dni,wind_speed,air_temperature,solar_zenith_angle,surface_pressure,relative_humidity'            # Choose year of data
+                year = '2010'
+                # Set leap year to true or false. True will return leap day data if present, false will not.
+                leap_year = 'false'
+                # Set time interval in minutes, i.e., '30' is half hour intervals. Valid intervals are 30 & 60.
+                interval = '60'
+                # Specify Coordinated Universal Time (UTC), 'true' will use UTC, 'false' will use the local time zone of the data.
+                # NOTE: In order to use the NSRDB data in SAM, you must specify UTC as 'false'. SAM requires the data to be in the
+                # local time zone.
+                utc = 'true'
+                # Your full name, use '+' instead of spaces.
+                your_name = 'Shrey+Poshiya'
+                # Your reason for using the NSRDB.
+                reason_for_use = 'personal+project'
+                # Your affiliation
+                your_affiliation = 'Santa+Fe+Preparatory+School'
+                # Your email address
+                your_email = 'shreyposh@gmail.com'
+                # Please join our mailing list so we can keep you up-to-date on new developments.
+                mailing_list = 'false'
+                # Declare url string
+                url = 'https://developer.nrel.gov/api/solar/nsrdb_psm3_download.csv?wkt=POINT({lon}%20{lat})&names={year}&leap_day={leap}&interval={interval}&utc={utc}&full_name={name}&email={email}&affiliation={affiliation}&mailing_list={mailing_list}&reason={reason}&api_key={api}&attributes={attr}'.format(year=year, lat=lat, lon=lon, leap=leap_year, interval=interval, utc=utc, name=your_name, email=your_email, mailing_list=mailing_list, affiliation=your_affiliation, reason=reason_for_use, api=api_key, attr=attributes)
+                # Return just the first 2 lines to get metadata:
+                info = pd.read_csv(url, header=None)
+                # See metadata for specified properties, e.g., timezone and elevation
+                timezone, elevation = info['Local Time Zone'], info['Elevation']
+                info = info.drop(axis=0, index=[0,1])
+                print(info)
+                ghi = average(info, 'Latitude')
+                dhi = average(info, 'Longitude')
+                dni = average(info, 'Time Zone')
+                df2 = pd.DataFrame([{'lat':latitude, 'lon':longitude, 'GHI':ghi, 'DHI':dhi, 'DNI':dni}])
+                df = df.append(df2, ignore_index = True)
+                print()
+        return(df)
 
 get_data([35.691544], [-105.944183])
