@@ -14,5 +14,3 @@ In order to run the model, the follwing packages must be installed IN THE SAME E
 (5) [SciKit-Learn]()
 (6) [Shapely]()
 (7) [Seaborn]()
-
-Both the PV Out and the Cost will be combined into a new metric, Watts per Dollar (W/$), which will then be nornalized to a value between 0 and 10 to ultimately assess the fitness of a given location.
