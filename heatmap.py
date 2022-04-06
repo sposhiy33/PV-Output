@@ -7,35 +7,37 @@ import matplotlib.pyplot as plt
 
 ## Contiguous US
 df = gpd.read_file('CartographicBoundries/US_State/cb_2018_us_state_500k.shp')
-df = df.drop([37,38,44,45,13,27,42])
-contUSdf = df.dissolve()
+contUSdf = df.drop([37,38,44,45,13,27,42])
+contUSdf = contUSdf.dissolve()
 
 # Load in Irridiance Data
-contUS_data = pd.read_csv('Data/ContinguousUS_data.csv')
-print(contUS_data)
+data = pd.read_csv('FinalOutData.csv')
 
 # GeoDataFrame from the Irridaince Data
-gdf_DNI = gpd.GeoDataFrame(contUS_data.AVG_dhi,
-        geometry = gpd.points_from_xy(contUS_data.lon, contUS_data.lat))
+# predData = gpd.GeoDataFrame(data['Predicted Generation'],
+#         geometry = gpd.points_from_xy(data.lon, data.lat))
+
+# sites = gpd.GeoDataFrame(geometry=gpd.points_from_xy([-97.86,-116.94], [30.17,32.85]))
+
+maximum = gpd.GeoDataFrame(geometry=gpd.points_from_xy([-115.802026], [33.10023]))
 
 ##################
 ### PLOTS #####
 ##################
-ax = gplt.polyplot(contUSdf, projection=gcrs.AlbersEqualArea())
+ax = contUSdf.plot(color='white',edgecolor='black')
 
-gplt.pointplot(gdf_DNI, hue='AVG_dhi',
-                 legend=True, ax=ax)
-
-# gplt.kdeplot(gdf_DNI, n_levels = 100, projection=gcrs.AlbersEqualArea(), ax=ax)
+# gplt.pointplot(maximum,ax=ax,extent=contUSdf.total_bounds)
 
 
+maximum.plot(ax=ax, c='r', markersize = 60)
 
-# ax1 = gplt.kdeplot(
-#         clip=contUSdf.geometry
-#         cmap='Reds',
-#         projection=gcrs.AlbersEqualArea(),
-#         shade=True, shade_lowest=False,
-#         clip=contUSdf.geometry,
-#         ax=ax)
+# gplt.pointplot(predData, hue='Predicted Generation',
+#                  legend=True, ax=ax)
+
+plt.title("Most Optimal Location for PV Panel in Contiguous US")
+
+
+
+
 
 plt.show()
