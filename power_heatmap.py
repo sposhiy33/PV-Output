@@ -37,7 +37,7 @@ def main():
     points = point_dataframe(lon, lat)
     print(points)
 
-    distance = min_dist(points, power)
+    distance = dist(points, power)
     print(distance)
 
     points.plot(ax=ax, color='red')
@@ -132,6 +132,19 @@ def point_dataframe(longitude, latitude):
 def min_dist(point, gpd2):
     gpd2['Dist'] = gpd2.apply(lambda row:  point.distance(row.geometry),axis=1)
     return gpd2
+
+def get_geom(row):
+    geom = row.geometry
+    print(type(geom))
+    return geom
+
+def dist(point, linestring):
+    dists = []
+    for row in range(len(point)):
+        each_point = get_geom(point[row])
+        distance = shapely.ops.nearest_points(each_point, linestring)
+        dists.append(distance)
+    return dists
 
 
 def min_distance(point, line):
